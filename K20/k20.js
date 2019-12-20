@@ -183,7 +183,7 @@ Module.expectedDataFileDownloads++;
   }
 
  }
- loadPackage({"files": [{"filename": "/dead.bmp", "start": 0, "end": 6220854, "audio": 0}, {"filename": "/fastboot.bmp", "start": 6220854, "end": 12441708, "audio": 0}, {"filename": "/locked.bmp", "start": 12441708, "end": 20023362, "audio": 0}, {"filename": "/unlocked.bmp", "start": 20023362, "end": 27605016, "audio": 0}], "remote_package_size": 996312, "package_uuid": "b6ae8640-d75e-4cf0-8400-f8e922d2d595"});
+ loadPackage({"files": [{"filename": "/dead.bmp", "start": 0, "end": 6220854, "audio": 0}, {"filename": "/fastboot.bmp", "start": 6220854, "end": 12441708, "audio": 0}, {"filename": "/locked.bmp", "start": 12441708, "end": 20023362, "audio": 0}, {"filename": "/unlocked.bmp", "start": 20023362, "end": 27605016, "audio": 0}], "remote_package_size": 996312, "package_uuid": "2f748704-bee1-4ddb-8d44-59f93a2bb017"});
 
 })();
 
