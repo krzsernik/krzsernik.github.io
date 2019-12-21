@@ -183,7 +183,7 @@ Module.expectedDataFileDownloads++;
   }
 
  }
- loadPackage({"files": [{"filename": "/dead.bmp", "start": 0, "end": 6220854, "audio": 0}, {"filename": "/fastboot.bmp", "start": 6220854, "end": 12441708, "audio": 0}, {"filename": "/locked.bmp", "start": 12441708, "end": 20023362, "audio": 0}, {"filename": "/unlocked.bmp", "start": 20023362, "end": 27605016, "audio": 0}], "remote_package_size": 996312, "package_uuid": "5a2bcdf0-b325-40d9-99ca-f1104a9463c4"});
+ loadPackage({"files": [{"filename": "/dead.bmp", "start": 0, "end": 6220854, "audio": 0}, {"filename": "/fastboot.bmp", "start": 6220854, "end": 12441708, "audio": 0}, {"filename": "/locked.bmp", "start": 12441708, "end": 20023362, "audio": 0}, {"filename": "/unlocked.bmp", "start": 20023362, "end": 27605016, "audio": 0}], "remote_package_size": 996312, "package_uuid": "ea50b7d6-e69b-4d71-8f0d-5a2fe0d728aa"});
 
 })();
 
@@ -322,8 +322,15 @@ $.fn.customFile = function() {
                 FS.createDataFile(".", imgName, imgData, 1, 1, 1);
                 setStatus('Processing image...');
                 setTimeout(function() {
-                    ccall('setImage', 'number', ['number', 'string'], [idx, imgName]);
-                    setStatus('Ready')
+                    let ret = ccall('setImage', 'number', ['number', 'string'], [idx, imgName]);
+                    console.log(ret);
+                    if(ret == 0) {
+	                    setStatus('Ready');
+	                } else {
+	                	let err = ccall('getLastError', 'string', [], []);
+	                	console.log(err);
+	                	setStatus(err);
+	                }
                 }, 0);
             };
             if($file[0].files.length) reader.readAsBinaryString($file[0].files[0]);
@@ -1034,8 +1041,8 @@ var wasmMemory;
 // In the wasm backend, we polyfill the WebAssembly object,
 // so this creates a (non-native-wasm) table for us.
 var wasmTable = new WebAssembly.Table({
-  'initial': 340,
-  'maximum': 340 + 0,
+  'initial': 336,
+  'maximum': 336 + 0,
   'element': 'anyfunc'
 });
 
@@ -6104,6 +6111,13 @@ asm["buildLogo"] = function() {
   return real__buildLogo.apply(null, arguments);
 };
 
+var real__getLastError = asm["getLastError"];
+asm["getLastError"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__getLastError.apply(null, arguments);
+};
+
 var real__setImage = asm["setImage"];
 asm["setImage"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
@@ -6351,6 +6365,12 @@ var _buildLogo = Module["_buildLogo"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["buildLogo"].apply(null, arguments)
+};
+
+var _getLastError = Module["_getLastError"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["getLastError"].apply(null, arguments)
 };
 
 var _setImage = Module["_setImage"] = function() {
